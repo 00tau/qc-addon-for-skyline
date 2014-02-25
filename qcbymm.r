@@ -18,7 +18,8 @@ totalArea <- function(dat) {
            + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
            + geom_point()
            + ggtitle(expression(atop(  "Total area for different runs"
-                                     , "together with 95% and 99% prediction intervals")))
+                                     , "together with 95% and 99% confidence intervals")))
+           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
            )
 }
 
@@ -29,7 +30,8 @@ isotopeDotProduct <- function(dat) {
            + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
            + geom_point()
            + ggtitle(expression(atop(  "Isotope dot product for different runs"
-                                     , "together with 95% and 99% prediction intervals")))
+                                     , "together with 95% and 99% confidence intervals")))
+           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
            )
 }
 
@@ -40,7 +42,8 @@ bestRetentionTime <- function(dat) {
            + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
            + geom_point()
            + ggtitle(expression(atop(  "Retention time for different runs"
-                                     , "together with 95% and 99% prediction intervals")))
+                                     , "together with 95% and 99% confidence intervals")))
+           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
            )
 }
 
@@ -50,9 +53,9 @@ maxFwhm <- function(dat) {
            + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.99, colour="black", linetype=4, fill="yellow", alpha=.2)
            + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
            + geom_point()
-           + ggtitle(expression(atop(  "Maximum width at half maximum intensity"
-                                     , "for different runs"
-                                     , "together with 95% and 99% prediction intervals")))
+           + ggtitle(expression(atop(  "Width at half maximum intensity for different runs"
+                                     , "together with 95% and 99% confidence intervals")))
+           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
            )
 }
 
@@ -63,11 +66,12 @@ averageMassErrorPPM <- function(dat) {
            + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
            + geom_point()
            + ggtitle(expression(atop(  "Average mass error in ppm for different runs"
-                                     , "together with 95% and 99% prediction intervals")))
+                                     , "together with 95% and 99% confidence intervals")))
+           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
            )
 }
 
-pdf(gsub('csv', 'pdf', args[1]))
+pdf(gsub('csv', 'pdf', args[1]), height=11.6, width=8.2)
 print(totalArea(dat))
 print(isotopeDotProduct(dat))
 print(bestRetentionTime(dat))
