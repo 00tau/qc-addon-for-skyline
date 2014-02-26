@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ReportSpecList>
+  <report name="QCbyMMDesgin" rowsource="pwiz.Skyline.Model.Databinding.Entities.Precursor" sublist="Results!*">
+    <column name="Results!*.Value.PeptideResult.ResultFile.Replicate.Name" />
+    <column name="Results!*.Value.PeptideResult.ResultFile.AcquiredTime" />
+    <column name="Peptide.ModifiedSequence" />
+    <column name="Mz" />
+    <column name="Results!*.Value.TotalArea" />
+    <column name="Results!*.Value.IsotopeDotProduct" />
+    <column name="Results!*.Value.BestRetentionTime" />
+    <column name="Results!*.Value.MaxFwhm" />
+    <column name="Results!*.Value.MinStartTime" />
+    <column name="Results!*.Value.MaxEndTime" />
+    <column name="Results!*.Value.AverageMassErrorPPM" />
+    <filter column="Results!*.Value" opname="isnotnullorblank" />
+  </report>
+</ReportSpecList>
