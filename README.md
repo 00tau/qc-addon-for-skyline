@@ -53,3 +53,5 @@ To Do
 =====
 
 - Currently untested!
+- If protein accession available, make one plot per accession.
+- Dynamically react on report template.
