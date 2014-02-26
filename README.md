@@ -1,11 +1,19 @@
 qc-addon-for-skyline
 ====================
 
+Introduction
+------------
+
 Will be an add-on script for performing easy quality control tasks within
 Skyline.
 
 Currently, you need to clone this repository, and make the script `qcbymm.r`
-executable.  Then you should be good to go.  On Linux:
+executable.  Then you should be good to go.
+
+Running the script as a stand-alone
+-----------------------------------
+
+On Linux:
 
 ```
 % git clone https://github.com/00tau/qc-addonn-for-skyline.git
@@ -24,7 +32,7 @@ following code from the command line.
 This will produce a file `example.pdf` with all the plots you need.
 
 Contributing author
-===================
+-------------------
 
 Sebastian Malchow
 
@@ -32,5 +40,4 @@ Sebastian Malchow
 To Do
 =====
 
-- Add the real `qcbymm.skyr` to the repository.
 - Currently untested!

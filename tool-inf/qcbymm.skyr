@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ReportSpecList>
-  <report name="QCbyMMDesgin" rowsource="pwiz.Skyline.Model.Databinding.Entities.Precursor" sublist="Results!*">
+  <report name="qcbymm" rowsource="pwiz.Skyline.Model.Databinding.Entities.Precursor" sublist="Results!*">
     <column name="Results!*.Value.PeptideResult.ResultFile.Replicate.Name" />
     <column name="Results!*.Value.PeptideResult.ResultFile.AcquiredTime" />
     <column name="Peptide.ModifiedSequence" />
