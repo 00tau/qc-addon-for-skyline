@@ -24,7 +24,7 @@ if(!length(args) == 1) {
 
 dat <- read.csv(args[1])
 
-library(ggplot2)
+suppressPackageStartupMessages(library(ggplot2))
 
 totalArea <- function(dat) {
     return(  ggplot(dat, aes(AcquiredTime, TotalArea))
@@ -92,4 +92,4 @@ print(isotopeDotProduct(dat))
 print(bestRetentionTime(dat))
 print(maxFwhm(dat))
 print(averageMassErrorPPM(dat))
-dev.off()
+msg <- dev.off()
