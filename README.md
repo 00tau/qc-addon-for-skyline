@@ -10,6 +10,20 @@ Skyline.
 Currently, you need to clone this repository, and make the script `qcbymm.r`
 executable.  Then you should be good to go.
 
+Adding the script to the tool box in Skyline
+--------------------------------------------
+
+On Linux:
+
+```
+% git clone https://github.com/00tau/qc-addonn-for-skyline.git
+% make
+```
+
+This will create a `qcbymm.zip` file which contains the needed install scripts
+for Skyline.  Just follow your Skyline-GUI.
+
+
 Running the script as a stand-alone
 -----------------------------------
 
