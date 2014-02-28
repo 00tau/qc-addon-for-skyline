@@ -15,16 +15,29 @@
 #     You should have received a copy of the GNU General Public License along
 #     with this program. If not, see <http://www.gnu.org/licenses/>.
 
-args <- commandArgs(TRUE)
+arg <- commandArgs(TRUE)
 
-if(!length(args) == 1) {
-    message("Need one argument in the format: %.csv")
+fileCSV <- grep('.csv$', arg, value=TRUE)
+verbose <- is.element("verbose", arg)
+
+if (verbose) {
+    message("Command line arguments ", arg)
+    message("  Report file: ", fileCSV)
+    message("  Verbose: ", verbose)
+}
+
+if(!length(fileCSV) == 1) {
+    message("Need one single report file in the format: %.csv")
     q(status=1)
 }
 
-dat <- read.csv(args[1])
+dat <- read.csv(arg[1])
+
+if (verbose) message("Successfully parsed report file")
 
 suppressPackageStartupMessages(library(ggplot2))
+
+if (verbose) message("Successfully loaded package: ggplot2")
 
 totalArea <- function(dat) {
     return(  ggplot(dat, aes(AcquiredTime, TotalArea))
@@ -86,10 +99,23 @@ averageMassErrorPPM <- function(dat) {
            )
 }
 
-pdf(gsub('csv', 'pdf', args[1]), height=11.6, width=8.2)
+pdfFileName <- gsub('csv', 'pdf', arg[1])
+
+if (verbose) message("Opening PDF file ", pdfFileName)
+
+pdf(pdfFileName, height=11.6, width=8.2)
 print(totalArea(dat))
 print(isotopeDotProduct(dat))
 print(bestRetentionTime(dat))
 print(maxFwhm(dat))
 print(averageMassErrorPPM(dat))
 msg <- dev.off()
+
+if (verbose) {
+    message("Successfully closed PDF file ", pdfFileName)
+}
+
+if (verbose) {
+    Sys.sleep(1)
+    browseURL(pdfFileName)
+}
