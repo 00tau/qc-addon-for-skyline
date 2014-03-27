@@ -126,7 +126,8 @@ pdfFileName <- gsub('csv', 'pdf', arg[1])
 
 if (verbose) message("Opening PDF file for writing ", pdfFileName)
 
-pdf(pdfFileName, height=11.6, width=8.2)
+#pdf(pdfFileName, height=11.6, width=8.2)
+pdf(pdfFileName)
 if(!inherits(ps1, "try-error")) print(ps1)
 if(!inherits(ps2, "try-error")) print(ps2)
 if(!inherits(ps3, "try-error")) print(ps3)

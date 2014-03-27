@@ -7,8 +7,8 @@ Introduction
 This is an add-on script for performing easy quality control tasks within
 Skyline.
 
-Adding the script to the tool box in Skyline
---------------------------------------------
+How to add the script to the tool box in Skyline
+------------------------------------------------
 
 On Linux:
 
@@ -19,11 +19,11 @@ On Linux:
 ```
 
 This will create a `qcbymm.zip` file which contains the needed install scripts
-for Skyline.  Just follow your Skyline-GUI.
+for Skyline.  Now, just follow your Skyline-GUI.
 
 
-Running the script as a stand-alone
------------------------------------
+You may also run this script as a stand-alone program
+-----------------------------------------------------
 
 On Linux:
 
@@ -46,13 +46,10 @@ This will produce a file `example.pdf` with all the plots you need.
 Authors
 -------
 
-    Thomas W. D. Möbius (R-programming)
-    Sebastian Malchow (Skyline wizard)
+Thomas W. D. Möbius (R-programming), Sebastian Malchow (Skyline wizard)
 
 
 To Do
 =====
 
-- Currently untested!
-- If protein accession available, make one plot per accession.
 - Dynamically react on report template.
