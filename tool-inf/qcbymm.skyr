@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ReportSpecList>
   <revision index="1" />
-  <report name="140327-qcbymm-wirth-reportsOFF">
+  <report name="qcbymm">
     <table name="T1">DbPrecursorResult</table>
     <table name="T2">DbPrecursor</table>
     <select>
