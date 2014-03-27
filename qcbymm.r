@@ -122,7 +122,7 @@ ps3 <- try(qcstat.MaxFwhm(dat), silent=T)
 ps4 <- try(qcstat.MaxEndTime(dat), silent=T)
 ps5 <- try(qcstat.AverageMassErrorPPM(dat), silent=T)
 
-pdfFileName <- gsub('csv', 'pdf', arg[1])
+pdfFileName <- gsub('csv', 'pdf', fileCSV)
 
 if (verbose) message("Opening PDF file for writing ", pdfFileName)
 
