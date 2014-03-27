@@ -1,5 +1,5 @@
-qc-addon-for-skyline
-====================
+Quality control plots in Skyline
+================================
 
 Introduction
 ------------
@@ -43,10 +43,11 @@ the following code from the command line.
 
 This will produce a file `example.pdf` with all the plots you need.
 
-Contributing author
--------------------
+Authors
+-------
 
-Sebastian Malchow
+    Thomas W. D. Möbius (R-programming)
+    Sebastian Malchow (Skyline wizard)
 
 
 To Do

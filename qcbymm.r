@@ -33,7 +33,10 @@ if(!length(fileCSV) == 1) {
 
 dat <- read.csv(arg[1])
 
-if (verbose) message("Successfully parsed report file")
+if (verbose) {
+    message("Successfully parsed report file having the following fields:")
+    print(names(dat))
+}
 
 suppressPackageStartupMessages(library(ggplot2))
 
@@ -101,7 +104,7 @@ averageMassErrorPPM <- function(dat) {
 
 pdfFileName <- gsub('csv', 'pdf', arg[1])
 
-if (verbose) message("Opening PDF file ", pdfFileName)
+if (verbose) message("Opening PDF file for writing ", pdfFileName)
 
 pdf(pdfFileName, height=11.6, width=8.2)
 print(totalArea(dat))
