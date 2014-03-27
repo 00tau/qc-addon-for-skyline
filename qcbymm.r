@@ -19,11 +19,14 @@ arg <- commandArgs(TRUE)
 
 fileCSV <- grep('.csv$', arg, value=TRUE)
 verbose <- is.element("verbose", arg)
+pdfFileName <- gsub('csv', 'pdf', fileCSV)
+
 
 if (verbose) {
     message("Command line arguments ", arg)
     message("  Report file: ", fileCSV)
     message("  Verbose: ", verbose)
+    message("  Output file will be ", pdfFileName)
 }
 
 if(!length(fileCSV) == 1) {
@@ -32,6 +35,9 @@ if(!length(fileCSV) == 1) {
 }
 
 dat <- read.csv(fileCSV, na.strings="#N/A")
+dat$ReplicateName <- NULL #factor(make.names(dat$ReplicateName))
+dat$PeptideModifiedSequence <- factor(gsub("\\]|\\[|\\+", "", dat$PeptideModifiedSequence))
+dat$AcquiredTime <- factor(gsub(" ", "_", gsub("/|:", ".", dat$AcquiredTime)))
 
 if (verbose) {
     message("Successfully parsed report file having the following fields:")
@@ -122,8 +128,6 @@ ps3 <- try(qcstat.MaxFwhm(dat), silent=T)
 ps4 <- try(qcstat.MaxEndTime(dat), silent=T)
 ps5 <- try(qcstat.AverageMassErrorPPM(dat), silent=T)
 
-pdfFileName <- gsub('csv', 'pdf', fileCSV)
-
 if (verbose) message("Opening PDF file for writing ", pdfFileName)
 
 #pdf(pdfFileName, height=11.6, width=8.2)
@@ -140,6 +144,6 @@ if (verbose) {
 }
 
 if (verbose) {
-    Sys.sleep(1)
+    Sys.sleep(2)
     browseURL(pdfFileName)
 }
