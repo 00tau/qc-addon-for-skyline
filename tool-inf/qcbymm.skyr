@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <ReportSpecList>
   <revision index="1" />
-  <report name="qcbymm">
+  <report name="140327-qcbymm-wirth-reportsOFF">
     <table name="T1">DbPrecursorResult</table>
     <table name="T2">DbPrecursor</table>
     <select>
-      <column name="T1">PeptideResult.ResultFile.Replicate.Name</column>
-      <column name="T1">PeptideResult.ResultFile.AcquiredTime</column>
+      <column name="T1">PeptideResult.ProteinResult.ReplicateName</column>
+      <column name="T1">PeptideResult.ProteinResult.AcquiredTime</column>
       <column name="T2">Peptide.ModifiedSequence</column>
-      <column name="T1">Mz</column>
-      <column name="T1">TotalArea"</column>
-      <column name="T1">IsotopeDotProduct"</column>
-      <column name="T1">BestRetentionTime"</column>
-      <column name="T1">MaxFwhm"</column>
-      <column name="T1">MinStartTime"</column>
-      <column name="T1">MaxEndTime"</column>
-      <column name="T1">AverageMassErrorPPM"</column>
+      <column name="T2">Mz</column>
+      <column name="T1">TotalArea</column>
+      <column name="T1">IsotopeDotProduct</column>
+      <column name="T1">BestRetentionTime</column>
+      <column name="T1">MaxFwhm</column>
+      <column name="T1">MinStartTime</column>
+      <column name="T1">MaxEndTime</column>
+      <column name="T1">AverageMassErrorPPM</column>
     </select>
   </report>
 </ReportSpecList>
