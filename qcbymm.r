@@ -31,7 +31,7 @@ if(!length(fileCSV) == 1) {
     q(status=1)
 }
 
-dat <- read.csv(arg[1])
+dat <- read.csv(fileCSV, na.strings="#N/A")
 
 if (verbose) {
     message("Successfully parsed report file having the following fields:")
@@ -39,79 +39,99 @@ if (verbose) {
 }
 
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(plyr))
 
 if (verbose) message("Successfully loaded package: ggplot2")
 
-totalArea <- function(dat) {
-    return(  ggplot(dat, aes(AcquiredTime, TotalArea))
-           + facet_grid(PrecursorMz+PeptideModifiedSequence~., scale="free")
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.99, colour="black", linetype=4, fill="yellow", alpha=.2)
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
-           + geom_point()
-           + ggtitle(expression(atop(  "Total area for different runs"
-                                     , "together with 95% and 99% confidence intervals")))
+# need to produce one plot per PrecursorMz and PeptideModifiedSequence!
+
+qcplot <- function(dat, qcstatistic) {
+    return(  ggplot(dat, aes(x=AcquiredTime))
+           + geom_point(aes_string(y=qcstatistic))
+           + facet_wrap(~PeptideModifiedSequence+PrecursorMz, scale="free")
+           + ggtitle(expression(atop(  "Total measured area for different runs together"
+                                     , "with bands of one (green) and two (blue) standard deviations")))
            + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+           + geom_hline(aes(yintercept=c(  qc.mean
+                                         , qc.mean+qc.sd
+                                         , qc.mean-qc.sd
+                                         , qc.mean+2*qc.sd
+                                         , qc.mean-2*qc.sd)),
+                        colour=c("black", "darkgreen", "darkgreen", "blue", "blue"),
+                        linetype=c(3,4,4,4,4))
            )
 }
 
-isotopeDotProduct <- function(dat) {
-    return(  ggplot(dat, aes(AcquiredTime, IsotopeDotProduct))
-           + facet_grid(PrecursorMz+PeptideModifiedSequence~., scale="free")
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.99, colour="black", linetype=4, fill="yellow", alpha=.2)
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
-           + geom_point()
-           + ggtitle(expression(atop(  "Isotope dot product for different runs"
-                                     , "together with 95% and 99% confidence intervals")))
-           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-           )
+qcstat.TotalArea <- function (dat) {
+    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
+                qc.mean = mean(TotalArea, na.rm=T), qc.sd = sd(TotalArea, na.rm=T))
+    dd <- merge(dat, ds)
+    p  <- qcplot(dd, qcstatistic="TotalArea")
+    plotlist <- dlply(dd, .(PeptideModifiedSequence, PrecursorMz), function(x) p %+% x)
+    return(plotlist)
 }
 
-bestRetentionTime <- function(dat) {
-    return(  ggplot(dat, aes(AcquiredTime, BestRetentionTime))
-           + facet_grid(PrecursorMz+PeptideModifiedSequence~., scale="free")
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.99, colour="black", linetype=4, fill="yellow", alpha=.2)
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
-           + geom_point()
-           + ggtitle(expression(atop(  "Retention time for different runs"
-                                     , "together with 95% and 99% confidence intervals")))
-           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-           )
+qcstat.BestRetentionTime <- function (dat) {
+    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
+                qc.mean = mean(BestRetentionTime, na.rm=T), qc.sd = sd(BestRetentionTime, na.rm=T))
+    dd <- merge(dat, ds)
+    p  <- qcplot(dd, qcstatistic="BestRetentionTime")
+    plotlist <- dlply(dd, .(PeptideModifiedSequence, PrecursorMz), function(x) p %+% x)
+    return(plotlist)
 }
 
-maxFwhm <- function(dat) {
-    return(  ggplot(dat, aes(AcquiredTime, MaxFwhm))
-           + facet_grid(PrecursorMz+PeptideModifiedSequence~., scale="free")
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.99, colour="black", linetype=4, fill="yellow", alpha=.2)
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
-           + geom_point()
-           + ggtitle(expression(atop(  "Width at half maximum intensity for different runs"
-                                     , "together with 95% and 99% confidence intervals")))
-           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-           )
+qcstat.MaxFwhm <- function (dat) {
+    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
+                qc.mean = mean(MaxFwhm, na.rm=T), qc.sd = sd(MaxFwhm, na.rm=T))
+    dd <- merge(dat, ds)
+    p  <- qcplot(dd, qcstatistic="MaxFwhm")
+    plotlist <- dlply(dd, .(PeptideModifiedSequence, PrecursorMz), function(x) p %+% x)
+    return(plotlist)
 }
 
-averageMassErrorPPM <- function(dat) {
-    return(  ggplot(dat, aes(AcquiredTime, AverageMassErrorPPM))
-           + facet_grid(PrecursorMz+PeptideModifiedSequence~., scale="free")
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.99, colour="black", linetype=4, fill="yellow", alpha=.2)
-           + stat_smooth(aes(group=1), method="lm", formula=y~1, level=0.95, colour="black", linetype=4, fill="blue", alpha=.3)
-           + geom_point()
-           + ggtitle(expression(atop(  "Average mass error in ppm for different runs"
-                                     , "together with 95% and 99% confidence intervals")))
-           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-           )
+qcstat.MaxEndTime <- function (dat) {
+    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
+                qc.mean = mean(MaxEndTime, na.rm=T), qc.sd = sd(MaxEndTime, na.rm=T))
+    dd <- merge(dat, ds)
+    p  <- qcplot(dd, qcstatistic="MaxEndTime")
+    plotlist <- dlply(dd, .(PeptideModifiedSequence, PrecursorMz), function(x) p %+% x)
+    return(plotlist)
 }
+
+qcstat.AverageMassErrorPPM <- function (dat) {
+    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
+                qc.mean = mean(AverageMassErrorPPM, na.rm=T), qc.sd = sd(AverageMassErrorPPM, na.rm=T))
+    dd <- merge(dat, ds)
+    p  <- qcplot(dd, qcstatistic="AverageMassErrorPPM")
+    plotlist <- dlply(dd, .(PeptideModifiedSequence, PrecursorMz), function(x) p %+% x)
+    return(plotlist)
+}
+
+qcstat.IsotopeDotProduct <- function (dat) {
+    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
+                qc.mean = mean(IsotopeDotProduct, na.rm=T), qc.sd = sd(IsotopeDotProduct, na.rm=T))
+    dd <- merge(dat, ds)
+    p  <- qcplot(dd, qcstatistic="IsotopeDotProduct")
+    plotlist <- dlply(dd, .(PeptideModifiedSequence, PrecursorMz), function(x) p %+% x)
+    return(plotlist)
+}
+
+ps1 <- try(qcstat.TotalArea(dat), silent=T)
+ps2 <- try(qcstat.BestRetentionTime(dat), silent=T)
+ps3 <- try(qcstat.MaxFwhm(dat), silent=T)
+ps4 <- try(qcstat.MaxEndTime(dat), silent=T)
+ps5 <- try(qcstat.AverageMassErrorPPM(dat), silent=T)
 
 pdfFileName <- gsub('csv', 'pdf', arg[1])
 
 if (verbose) message("Opening PDF file for writing ", pdfFileName)
 
 pdf(pdfFileName, height=11.6, width=8.2)
-print(totalArea(dat))
-print(isotopeDotProduct(dat))
-print(bestRetentionTime(dat))
-print(maxFwhm(dat))
-print(averageMassErrorPPM(dat))
+if(!inherits(ps1, "try-error")) print(ps1)
+if(!inherits(ps2, "try-error")) print(ps2)
+if(!inherits(ps3, "try-error")) print(ps3)
+if(!inherits(ps4, "try-error")) print(ps4)
+if(!inherits(ps5, "try-error")) print(ps5)
 msg <- dev.off()
 
 if (verbose) {
