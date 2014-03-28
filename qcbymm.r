@@ -47,25 +47,36 @@ if (verbose) {
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(plyr))
 
-if (verbose) message("Successfully loaded package: ggplot2")
+if (verbose) message("Successfully loaded packages: ggplot2, plyr")
 
 # need to produce one plot per PrecursorMz and PeptideModifiedSequence!
 
 qcplot <- function(dat, qcstatistic) {
-    return(  ggplot(dat, aes(x=AcquiredTime))
-           + geom_point(aes_string(y=qcstatistic))
-           + facet_wrap(~PeptideModifiedSequence+PrecursorMz, scale="free")
-           + ggtitle(expression(atop(  "Total measured area for different runs together"
-                                     , "with bands of one (green) and two (blue) standard deviations")))
-           + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-           + geom_hline(aes(yintercept=c(  qc.mean
-                                         , qc.mean+qc.sd
-                                         , qc.mean-qc.sd
-                                         , qc.mean+2*qc.sd
-                                         , qc.mean-2*qc.sd)),
-                        colour=c("black", "darkgreen", "darkgreen", "blue", "blue"),
-                        linetype=c(3,4,4,4,4))
-           )
+    if (all(dat$qc.sd > 0)) {
+        return(  ggplot(dat, aes(x=AcquiredTime))
+               + geom_point(aes_string(y=qcstatistic))
+               + facet_wrap(~PeptideModifiedSequence+PrecursorMz, scale="free")
+               + ggtitle(expression(atop(  "Total measured area for different runs together"
+                                         , "with bands of one (green) and two (blue) standard deviations")))
+               + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+               + geom_hline(aes(yintercept=c(  qc.mean
+                                             , qc.mean+qc.sd
+                                             , qc.mean-qc.sd
+                                             , qc.mean+2*qc.sd
+                                             , qc.mean-2*qc.sd)),
+                            colour=c("black", "darkgreen", "darkgreen", "blue", "blue"),
+                            linetype=c(3,4,4,4,4))
+               )
+    } else {
+        return(  ggplot(dat, aes(x=AcquiredTime))
+               + geom_point(aes_string(y=qcstatistic))
+               + facet_wrap(~PeptideModifiedSequence+PrecursorMz, scale="free")
+               + ggtitle(expression(atop(  "Total measured area for different runs together"
+                                         , "with bands of one (green) and two (blue) standard deviations")))
+               + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+               + geom_hline(aes(yintercept=qc.mean), colour="black", linetype=3)
+               )
+    }
 }
 
 qcstat.TotalArea <- function (dat) {
