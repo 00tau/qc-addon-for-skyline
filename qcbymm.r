@@ -15,11 +15,18 @@
 #     You should have received a copy of the GNU General Public License along
 #     with this program. If not, see <http://www.gnu.org/licenses/>.
 
+####################################
+## Reading command line arguments ##
+####################################
+
 arg <- commandArgs(TRUE)
 
 fileCSV <- grep('.csv$', arg, value=TRUE)
 verbose <- is.element("verbose", arg)
 pdfFileName <- gsub('csv', 'pdf', fileCSV)
+
+nump = 10
+identifiers <- c("ProteinName", "PeptideModifiedSequence", "PrecursorMz", "AcquiredTime")
 
 if (verbose) {
     message("Command line arguments ", arg)
@@ -33,22 +40,15 @@ if(!length(fileCSV) == 1) {
     q(status=1)
 }
 
-dat <- read.csv(fileCSV, na.strings="#N/A")
-dat$ReplicateName <- NULL #factor(make.names(dat$ReplicateName))
-dat$PeptideModifiedSequence <- factor(gsub("\\]|\\[|\\+", "", dat$PeptideModifiedSequence))
-dat$AcquiredTime <- gsub("20([0-9][0-9])", "\\1", dat$AcquiredTime)
-dat$AcquiredTime <- as.Date(dat$AcquiredTime, format="%m/%d/%y")
-dat$AcquiredTime <- factor(dat$AcquiredTime, ordered=T)
-
-if (verbose) {
-    message("Successfully parsed report file having the following fields:")
-    print(names(dat))
-}
-
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(plyr))
+suppressPackageStartupMessages(library(chron))
 
 if (verbose) message("Successfully loaded packages: ggplot2, plyr")
+
+##########################################
+## Adding Optional Pseudo Protein Names ##
+##########################################
 
 pseudoNames <- function (n, nump) {
     if (n < nump) {
@@ -64,128 +64,167 @@ createPseudoProteinNames <- function(oldnames, nump) {
                      pseudoNames(nlevels(oldnames), nump)))
 }
 
-nump = 10
-if (is.null(dat$ProteinName))
-    dat$ProteinName <- createPseudoProteinNames(dat$PeptideModifiedSequence, nump)
+##################
+## Data parsing ##
+##################
 
-qcplot <- function(dat, qcstatistic) {
-    p <-(  ggplot(dat, aes(x=AcquiredTime))
-         + geom_point(aes_string(y=qcstatistic))
-         + facet_grid(PrecursorMz+PeptideModifiedSequence~., scale="free")
-         + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-         + geom_hline(aes(yintercept=qc.mean, colour="black"))
-         + geom_hline(aes(yintercept=qc.lwr,  colour="darkgreen"))
-         + geom_hline(aes(yintercept=qc.upr,  colour="darkgreen"))
-         + geom_hline(aes(yintercept=qc.lwr2, colour="blue"))
-         + geom_hline(aes(yintercept=qc.upr2, colour="blue")))
+parseTime <- function (chr) {
+    a <- as.character(chr)
+    a <- matrix(unlist(strsplit(a, " ")), nrow=3)
+    dts <- chron(a[1,], a[2,])
+    dts <- dts + as.numeric(mapvalues(a[3,], c("AM", "PM"), c(0,1/2)))
+    return(dts)
+}
+
+cleanup <- function (dat) {
+    dat$ReplicateName <- NULL #factor(make.names(dat$ReplicateName))
+    dat$PeptideModifiedSequence <- factor(gsub("\\]|\\[|\\+", "", dat$PeptideModifiedSequence))
+    dat$AcquiredTime <- factor(parseTime(dat$AcquiredTime), ordered=TRUE)
+
+    if (is.null(dat$ProteinName)) {
+        dat$ProteinName <- createPseudoProteinNames(dat$PeptideModifiedSequence, nump)
+    }
+    return(dat)
+}
+
+dat <- cleanup(read.csv(fileCSV, na.strings="#N/A"))
+
+if (verbose) {
+    message("Successfully parsed report file having the following fields:")
+    print(names(dat))
+}
+
+#######################
+## Outlier detection ##
+#######################
+
+#' @export
+grupp.test <- function(xvec, sgnf) {
+    n <- length(na.omit(xvec))
+    candidate <- abs(xvec - mean(xvec, na.rm=TRUE))
+    gstat <- max(candidate, na.rm=TRUE) / sd(xvec, na.rm=TRUE)
+    tstat <- qt(p=1-(sgnf / (2*n)), df=n-2)
+    crval <- ((n-1)/sqrt(n)) * sqrt(tstat  / (n-2+tstat))
+    if (gstat > crval) {
+        return(which.max(candidate))
+    } else {
+        return(integer(0))
+    }
+}
+
+#' @export
+grupp.iterate <- function(xvec, sgnf) {
+    pvec <- integer(0)
+    while(sum(!is.na(xvec)) > 3 & !identical(sd(xvec, na.rm=T), 0)) {
+        nvec <- grupp.test(xvec, sgnf)
+        if (length(nvec) == 0) break()
+        xvec[nvec] <- NA
+        pvec <- c(pvec, nvec)
+    }
+    return(pvec)
+}
+
+#' @export
+grupp <- function(xvec, sgnf) {
+    outlier <- rep(FALSE, length(xvec))
+    pvec <- grupp.iterate(xvec, sgnf)
+    outlier[pvec] <- TRUE
+    return(outlier)
+}
+
+###################################################
+## Control Statistics and plotting functionality ##
+###################################################
+
+goodTheme <- theme(  axis.text.x = element_text(angle = 90, hjust = 1)
+                   , legend.position="bottom"
+                   , axis.text = element_text(colour = "black")
+                   , panel.background = element_rect(fill='grey80', colour='white')
+                   , panel.grid.major.x = element_line(size = 1.42)
+                   , strip.text.y = element_text(size=6, angle=45)
+                   #, plot.background = element_rect(fill='grey80', colour='black')
+                   )
+
+qcFlowChart <- function(dat, stat) {
+    p <-(  ggplot(dat, aes(x=AcquiredTime, fill=quality))
+         + geom_point(aes_string(y=stat), shape=21, size=3)
+         + scale_shape_discrete(solid=F)
+         + facet_grid(PeptideModifiedSequence+PrecursorMz~., scale="free")
+         + geom_hline(aes(yintercept=mean), colour="black")
+         + geom_hline(aes(yintercept=mean - 1*sd),  colour="green3")
+         + geom_hline(aes(yintercept=mean + 1*sd),  colour="green3")
+         + geom_hline(aes(yintercept=mean - 2*sd),  colour="yellow3")
+         + geom_hline(aes(yintercept=mean + 2*sd),  colour="yellow3", show_guide=T)
+         + scale_fill_manual(expression("Observation within")
+         , values=c("one"="green", "two"="yellow", "more"="blue", "outlier"="red")
+         , labels=c("one"="one std dev",
+                    "two"="two std dev",
+                    "more"="more that two std dev",
+                    "outlier"="possible outlier")
+         , breaks=c("one", "two", "more", "outlier"))
+         )
     return(p)
 }
 
-qcstat.TotalArea <- function (dat) {
-    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
-                qc.mean = mean(TotalArea, na.rm=T), qc.sd = sd(TotalArea, na.rm=T))
-    ds$qc.upr <-  with(ds, qc.mean+qc.sd  )
-    ds$qc.lwr <-  with(ds, qc.mean-qc.sd  )
-    ds$qc.upr2 <- with(ds, qc.mean+2*qc.sd)
-    ds$qc.lwr2 <- with(ds, qc.mean-2*qc.sd)
-    dd <- merge(dat, ds)
-    p  <- qcplot(dd, qcstatistic="TotalArea")
-    p <- p + ggtitle(expression(atop(  "Total measured area for different runs together"
-                                     , "with bands of one and two standard deviations")))
-    plotlist <- dlply(dd, .(ProteinName), function(x) p %+% x)
-    return(plotlist)
+qcstat <- function (dat, stat) {
+    dat <- dat[c("ProteinName", "PeptideModifiedSequence", "PrecursorMz", "AcquiredTime", stat)]
+    dat <- ddply(  dat
+                  , .(PeptideModifiedSequence, PrecursorMz)
+                  , function(d) {
+                      tmp <- data.frame(  ProteinName = d$ProteinName
+                                        , AcquiredTime = d$AcquiredTime)
+                      tmp[[stat]] <- d[[stat]]
+                      tmp$ugly <- grupp(d[[stat]], 0.0002)
+                      return(tmp)
+                  }
+                  ) # do not particularly like this hack
+    datm <- dat[dat$ugly == FALSE,]
+    frm <- as.formula(paste0(stat, " ~ PeptideModifiedSequence + PrecursorMz"),
+                             env=new.env())
+    dat.mean <- aggregate(frm, data=datm, mean, na.rm=T)
+    dat.sd <- aggregate(frm, data=datm, sd, na.rm=T)
+    names(dat.mean)  [3] <- "mean"
+    names(dat.sd)    [3] <- "sd"
+    dat <- Reduce(merge, list(dat, dat.mean, dat.sd))
+    good <- abs(dat[[stat]] - dat$mean) > dat$sd
+    bad  <- abs(dat[[stat]] - dat$mean) > 2*dat$sd
+    dat$quality <- factor(  pmax(good + bad, 3*dat$ugly)
+                          , levels=0:3
+                          , labels=c("one", "two", "more", "outlier"))
+    return(dat)
 }
 
-qcstat.BestRetentionTime <- function (dat) {
-    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
-                qc.mean = mean(BestRetentionTime, na.rm=T), qc.sd = sd(BestRetentionTime, na.rm=T))
-    ds$qc.upr <-  with(ds, qc.mean+qc.sd  )
-    ds$qc.lwr <-  with(ds, qc.mean-qc.sd  )
-    ds$qc.upr2 <- with(ds, qc.mean+2*qc.sd)
-    ds$qc.lwr2 <- with(ds, qc.mean-2*qc.sd)
-    dd <- merge(dat, ds)
-    p  <- qcplot(dd, qcstatistic="BestRetentionTime")
-    p <- p + ggtitle(expression(atop(  "Best retention time for different runs together"
-                                     , "with bands of one and two standard deviations")))
-    plotlist <- dlply(dd, .(ProteinName), function(x) p %+% x)
-    return(plotlist)
+customTitle <- function (stat) {
+    return(ggtitle(paste(strwrap(paste(stat, "for different runs together with
+                                       bands of one and two standard
+                                       deviations"), width=72),
+                                       collapse="\n")))
 }
 
-qcstat.MaxFwhm <- function (dat) {
-    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
-                qc.mean = mean(MaxFwhm, na.rm=T), qc.sd = sd(MaxFwhm, na.rm=T))
-    ds$qc.upr <-  with(ds, qc.mean+qc.sd  )
-    ds$qc.lwr <-  with(ds, qc.mean-qc.sd  )
-    ds$qc.upr2 <- with(ds, qc.mean+2*qc.sd)
-    ds$qc.lwr2 <- with(ds, qc.mean-2*qc.sd)
-    dd <- merge(dat, ds)
-    p  <- qcplot(dd, qcstatistic="MaxFwhm")
-    p <- p + ggtitle(expression(atop(  "MaxFwhm for different runs together"
-                                     , "with bands of one and two standard deviations")))
-    plotlist <- dlply(dd, .(ProteinName), function(x) p %+% x)
-    return(plotlist)
+qcplot <- function (dat, stat) {
+    dat <- qcstat(dat, stat)
+    flowChart <- qcFlowChart(dat, stat) + customTitle(stat)
+    ps <- dlply(dat, .(ProteinName), function(x) flowChart %+% x)
 }
 
-qcstat.MaxEndTime <- function (dat) {
-    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
-                qc.mean = mean(MaxEndTime, na.rm=T), qc.sd = sd(MaxEndTime, na.rm=T))
-    ds$qc.upr <-  with(ds, qc.mean+qc.sd  )
-    ds$qc.lwr <-  with(ds, qc.mean-qc.sd  )
-    ds$qc.upr2 <- with(ds, qc.mean+2*qc.sd)
-    ds$qc.lwr2 <- with(ds, qc.mean-2*qc.sd)
-    dd <- merge(dat, ds)
-    p  <- qcplot(dd, qcstatistic="MaxEndTime")
-    p <- p + ggtitle(expression(atop(  "MaxEndTime for different runs together"
-                                     , "with bands of one and two standard deviations")))
-    plotlist <- dlply(dd, .(ProteinName), function(x) p %+% x)
-    return(plotlist)
+qcmake <- function (dat, ident) {
+    plotMe <- function (l) {
+        if (is.numeric(dat[[l]])) return(qcplot(dat, l))
+    }
+    lapply(setdiff(names(dat), ident), plotMe)
 }
 
-qcstat.AverageMassErrorPPM <- function (dat) {
-    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
-                qc.mean = mean(AverageMassErrorPPM, na.rm=T), qc.sd = sd(AverageMassErrorPPM, na.rm=T))
-    ds$qc.upr <-  with(ds, qc.mean+qc.sd  )
-    ds$qc.lwr <-  with(ds, qc.mean-qc.sd  )
-    ds$qc.upr2 <- with(ds, qc.mean+2*qc.sd)
-    ds$qc.lwr2 <- with(ds, qc.mean-2*qc.sd)
-    dd <- merge(dat, ds)
-    p  <- qcplot(dd, qcstatistic="AverageMassErrorPPM")
-    p <- p + ggtitle(expression(atop(  "AverageMassErrorPPM for different runs together"
-                                     , "with bands of one and two standard deviations")))
-    plotlist <- dlply(dd, .(ProteinName), function(x) p %+% x)
-    return(plotlist)
-}
+#########################################
+## The actual plotting into a PDF file ##
+#########################################
 
-qcstat.IsotopeDotProduct <- function (dat) {
-    ds <- ddply(dat, .(PeptideModifiedSequence, PrecursorMz), summarise,
-                qc.mean = mean(IsotopeDotProduct, na.rm=T), qc.sd = sd(IsotopeDotProduct, na.rm=T))
-    ds$qc.upr <-  with(ds, qc.mean+qc.sd  )
-    ds$qc.lwr <-  with(ds, qc.mean-qc.sd  )
-    ds$qc.upr2 <- with(ds, qc.mean+2*qc.sd)
-    ds$qc.lwr2 <- with(ds, qc.mean-2*qc.sd)
-    dd <- merge(dat, ds)
-    p  <- qcplot(dd, qcstatistic="IsotopeDotProduct")
-    p <- p + ggtitle(expression(atop(  "IsotopeDotProduct for different runs together"
-                                     , "with bands of one and two standard deviations")))
-    plotlist <- dlply(dd, .(ProteinName), function(x) p %+% x)
-    return(plotlist)
-}
-
-ps1 <- try(qcstat.TotalArea(dat), silent=T)
-ps2 <- try(qcstat.BestRetentionTime(dat), silent=T)
-ps3 <- try(qcstat.MaxFwhm(dat), silent=T)
-ps4 <- try(qcstat.MaxEndTime(dat), silent=T)
-ps5 <- try(qcstat.AverageMassErrorPPM(dat), silent=T)
+ps <- qcmake(dat, identifiers)
 
 if (verbose) message("Opening PDF file for writing ", pdfFileName)
 
 pdf(pdfFileName, height=11.6, width=8.2)
-if(!inherits(ps1, "try-error")) print(ps1)
-if(!inherits(ps2, "try-error")) print(ps2)
-if(!inherits(ps3, "try-error")) print(ps3)
-if(!inherits(ps4, "try-error")) print(ps4)
-if(!inherits(ps5, "try-error")) print(ps5)
-msg <- dev.off()
+ps
+dev.off()
 
 if (verbose) {
     message("Successfully closed PDF file ", pdfFileName)
