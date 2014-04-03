@@ -140,7 +140,7 @@ goodTheme <- theme(  axis.text.x = element_text(angle = 45, hjust = 1)
                    , legend.position="bottom"
                    , axis.text = element_text(colour = "black")
                    , panel.background = element_rect(fill='grey80', colour='white')
-                   , panel.grid.major.x = element_line(size = 1.42)
+                   , panel.grid.major.x = element_line(size = .1)
                    , strip.text.y = element_text(size=6, angle=45)
                    #, plot.background = element_rect(fill='grey80', colour='black')
                    )

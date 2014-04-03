@@ -20,7 +20,9 @@ pkgs <- names(installed.packages()[,1])
 pkgn <- c("ggplot2", "plyr", "chron")
 
 inst <- function (pkg, pkgs) {
-    if (!is.element(pkg, pkgs)) {install.packages(pkg)}
+    if (!is.element(pkg, pkgs)) {
+        install.packages(pkg, repos='http://cran.us.r-project.org')
+    }
 }
 
 lapply(pkgn, inst, pkgs)
