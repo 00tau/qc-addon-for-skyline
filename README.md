@@ -28,10 +28,10 @@ The [Harvard UoB format]
 (http://lrweb.beds.ac.uk/guides/a-guide-to-referencing/cite_computer_program)
 suggests to cite this software in the following fashion:
 
-  > Möbius, T.W. and Malchow, S. (2014) easyQC: Statistical Process and Quality
-  > Control in Mass Spectrometry Workflows (Version 1.0) [Computer program].
-  > Available at: http://00tau.github.io/skyline-addon-easyQC/ (Accessed 03.
-  > April, 2014)
+    Möbius, T.W. and Malchow, S. (2014) easyQC: Statistical Process and Quality
+    Control in Mass Spectrometry Workflows (Version 1.0) [Computer program].
+    Available at: http://00tau.github.io/skyline-addon-easyQC/ (Accessed 03.
+    April, 2014)
 
 Thank you for using (and citing) this software.
 
