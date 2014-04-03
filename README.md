@@ -40,9 +40,20 @@ Thank you for using (and citing) this software.
 Simply follow the GUI-clicking adventure in Skyline:  Successively click on
 `Tools -> External Tools -> External Tool Store`.  In the appearing list select
 `easyQC`.  You will be promoted for the path to `Rscript` which needs to be
-installed on you system.  The tool `easyQC` relies on the CRAN R-packages
-[ggplot2], [plyr] and [chron].  Fortunately, these packages should
-automatically be installed for you.
+installed on you system.
+
+We have realised that since the introduction of "Live Reports" in new Versions
+of Skyline, the import of new template files might fail.  If this is the case
+for you, make sure two switch off the tick at "Live Reports" and restart
+Skyline.
+
+The underlying code-base of `easyQC` relies on the R-packages
+[ggplot2](http://ggplot2.org/), [plyr](http://plyr.had.co.nz/) and
+[chron](http://cran.r-project.org/web/packages/chron/index.html).  Fortunately,
+all these packages are hosted on [CRAN](http://cran.r-project.org/), and should
+automatically be installed into your R-environment when installing `easyQC`.
+If, for some reasons, this should not be the case for you, make sure these
+three packages are installed in your R-environment.
 
 ## Description
 
