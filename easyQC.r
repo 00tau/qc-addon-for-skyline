@@ -136,7 +136,7 @@ grupp <- function(xvec, sgnf) {
 ## Control Statistics and plotting functionality ##
 ###################################################
 
-goodTheme <- theme(  axis.text.x = element_text(angle = 90, hjust = 1)
+goodTheme <- theme(  axis.text.x = element_text(angle = 45, hjust = 1)
                    , legend.position="bottom"
                    , axis.text = element_text(colour = "black")
                    , panel.background = element_rect(fill='grey80', colour='white')
@@ -203,7 +203,7 @@ customTitle <- function (stat) {
 
 qcplot <- function (dat, stat) {
     dat <- qcstat(dat, stat)
-    flowChart <- qcFlowChart(dat, stat) + customTitle(stat)
+    flowChart <- qcFlowChart(dat, stat) + customTitle(stat) + goodTheme
     ps <- dlply(dat, .(ProteinName), function(x) flowChart %+% x)
 }
 
