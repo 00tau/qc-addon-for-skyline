@@ -1,3 +1,26 @@
-if (!is.element("ggplot2", names(installed.packages()[,1]))) {
-    install.packages("ggplot2")
+#! /usr/bin/Rscript --vanilla
+
+# Copyright (C) 2014 Thomas W. D. Möbius (kontakt@thomasmoebius.de)
+#
+#     This program is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by the
+#     Free Software Foundation, either version 3 of the License, or (at your
+#     option) any later version.
+#
+#     This program is distributed in the hope that it will be useful, but
+#     WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#     Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License along
+#     with this program. If not, see <http://www.gnu.org/licenses/>.
+
+pkgs <- names(installed.packages()[,1])
+
+pkgn <- c("ggplot2", "plyr", "chron")
+
+inst <- function (pkg, pkgs) {
+    if (!is.element(pkg, pkgs)) {install.packages(pkg)}
 }
+
+lapply(pkgn, inst, pkgs)

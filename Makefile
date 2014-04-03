@@ -1,7 +1,7 @@
 all: clean addon
 
 addon:
-	zip -r qcbymm.zip qcbymm.r tool-inf LICENSE
+	zip -r easyQC.zip easyQC.r tool-inf LICENSE
 
 clean:
-	rm qcbymm.zip
+	rm easyQC.zip

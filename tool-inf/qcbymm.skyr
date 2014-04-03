@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ReportSpecList>
   <revision index="1" />
-  <report name="qcbymm">
+  <report name="easyQC">
     <table name="T1">DbPrecursorResult</table>
     <table name="T2">DbPrecursor</table>
     <select>
