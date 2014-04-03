@@ -1,97 +1,182 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Quality control plots in Skyline by 00tau</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Statistical Process and Quality Control in Mass Spectrometry Workflows : Add-on tool for performing easy process and quality control tasks in Skyline" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Statistical Process and Quality Control in Mass Spectrometry Workflows</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Quality control plots in Skyline</h1>
-          <h2>Add-on script for performing easy quality control tasks in Skyline</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/00tau/skyline-addon-easyqc">View on GitHub</a>
+
+          <h1 id="project_title">Statistical Process and Quality Control in Mass Spectrometry Workflows</h1>
+          <h2 id="project_tagline">Add-on tool for performing easy process and quality control tasks in Skyline</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/00tau/skyline-addon-easyqc/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/00tau/skyline-addon-easyqc/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/00tau/skyline-addon-qcbymm/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/00tau/skyline-addon-qcbymm/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/00tau/skyline-addon-qcbymm" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h1>
-<a name="quality-control-plots-in-skyline" class="anchor" href="#quality-control-plots-in-skyline"><span class="octicon octicon-link"></span></a>Quality control plots in Skyline</h1>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="statistical-process-and-quality-control-in-mass-spectrometry-workflows" class="anchor" href="#statistical-process-and-quality-control-in-mass-spectrometry-workflows"><span class="octicon octicon-link"></span></a>Statistical Process and Quality Control in Mass Spectrometry Workflows</h1>
 
 <h2>
-<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
+<a name="what-is-easyqc" class="anchor" href="#what-is-easyqc"><span class="octicon octicon-link"></span></a>What is easyQC?</h2>
 
-<p>This is an add-on script for performing easy quality control tasks within
-Skyline.</p>
+<p>The program <code>easyQC</code> is tool for statistical process and quality control in
+mass spectrometry workflows that integrates nicely in the <a href="https://skyline.gs.washington.edu/labkey/project/home/software/Skyline/begin.view">Skyline Targeted
+Proteomics
+Environment</a>.</p>
 
 <h2>
-<a name="how-to-add-the-script-to-the-tool-box-in-skyline" class="anchor" href="#how-to-add-the-script-to-the-tool-box-in-skyline"><span class="octicon octicon-link"></span></a>How to add the script to the tool box in Skyline</h2>
+<a name="feature-list-at-a-glance" class="anchor" href="#feature-list-at-a-glance"><span class="octicon octicon-link"></span></a>Feature list at a glance</h2>
 
-<p>On Linux:</p>
+<ul>
+<li>Automatically sorts your data by date and time and orders your observations
+with the most recent on the right.  ("What? Does this mean I don't need to
+sort my data manually as it is the case for some other software tools out
+there?", "Yes.")</li>
+<li>Dynamically adapts to custom report templates. (See details below.)</li>
+<li>Flow charts for single peptides can optionally be grouped together by their
+common protein accession.   (See details below.)</li>
+<li>Plots are generated in a nice page layout, ready for printing.</li>
+<li>Observations are colour-coded by a easy four-colour-code, which makes it very
+easy too detect deviations from the norm.</li>
+<li>Has a built in outlier detection.  (See details below.)</li>
+<li>Plot as <em>many</em> flow charts for as <em>many</em> peptides as you like.</li>
+</ul><h2>
+<a name="how-to-cite-this-software" class="anchor" href="#how-to-cite-this-software"><span class="octicon octicon-link"></span></a>How to cite this software</h2>
 
-<pre><code>% git clone https://github.com/00tau/qc-addonn-for-skyline.git
-% cd qc-addon-for-skyline
-% make
+<p>The <a href="http://lrweb.beds.ac.uk/guides/a-guide-to-referencing/cite_computer_program">Harvard UoB format</a>
+suggests to cite this software in the following fashion:</p>
+
+<pre><code>Möbius, T.W. and Malchow, S. (2014) easyQC: Statistical Process and Quality
+Control in Mass Spectrometry Workflows (Version 1.0) [Computer program].
+Available at: http://00tau.github.io/skyline-addon-easyQC/ (Accessed 03.
+April, 2014)
 </code></pre>
 
-<p>This will create a <code>qcbymm.zip</code> file which contains the needed install scripts
+<p>Thank you for using (and citing) this software.</p>
+
+<h2>
+<a name="installation-using-the-skyline-gui" class="anchor" href="#installation-using-the-skyline-gui"><span class="octicon octicon-link"></span></a>Installation using the skyline GUI</h2>
+
+<p>Simply follow the GUI-clicking adventure by successively clicking on <code>Tools -&gt;
+External Tools -&gt; External Tool Store</code>.  In the appearing list select (click
+on) <code>easyQC</code>.  You will be promoted for the path to <code>Rscript</code>, which needs to
+be installed on you system.</p>
+
+<p>We have realised that since the introduction of "Live Reports" in new Versions
+of Skyline, the import of new templates files might fail.  If this is the case
+for you, make sure two switch off "Live Reports", restart Skyline, and try the
+installation again.</p>
+
+<p>The underlying code-base of <code>easyQC</code> relies on the R-packages
+<a href="http://ggplot2.org/">ggplot2</a>, <a href="http://plyr.had.co.nz/">plyr</a> and
+<a href="http://cran.r-project.org/web/packages/chron/index.html">chron</a>.  Fortunately,
+all these packages are hosted on <a href="http://cran.r-project.org/">CRAN</a>, and should
+automatically be installed into your R-environment, when installing <code>easyQC</code>.
+If, for some reasons, this should not be the case for you, make sure these
+three packages are installed in your R-environment.</p>
+
+<h2>
+<a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<p>The software comes with an exemplary report template called <code>easyQC</code>.  We
+recommend to just go with this template, but feel free to create your own.  The
+absolute necessary fields your template should contain are:
+<code>PeptideModifiedSequence</code> and <code>PrecursorMz</code>.  These two fields are used as
+identifiers for your peptides, and, thus, all other fields should uniquely be
+identifiable by these two.  Optionally, the field <code>ProteinName</code> can be added to
+your template.</p>
+
+<p>By default, the flow charts of ten peptides are grouped together into one plot
+each.  If the template also contains the associated protein accession of each
+peptide, namely the field <code>ProteinName</code>, then all peptides which belong to the
+same protein accession are grouped into one plot.</p>
+
+<p>Before the calculation of the mean and standard deviations of each flow chart,
+the software will do some outlier detection of your data, namely <a href="http://en.wikipedia.org/wiki/Grubbs%27_test_for_outliers">Grubbs' test
+for outliers</a> will be
+applied.  Observations which are classified as outliers by this test are
+discarded in the estimation of the mean and standard deviations.   This gives
+the estimated means and standard deviations some desirable
+<a href="http://en.wikipedia.org/wiki/Robust_statistics">robust</a> features.</p>
+
+<h2>
+<a name="you-can-also-use-easyqc-from-the-command-line" class="anchor" href="#you-can-also-use-easyqc-from-the-command-line"><span class="octicon octicon-link"></span></a>You can also use <code>easyQC</code> from the command line</h2>
+
+<p>On Linux, you simply need to add the directory in which you have cloned
+<code>easyQC</code>'s repository to your path.  Also make sure that <code>easyQC.r</code> is
+executable.</p>
+
+<pre><code>% git clone https://github.com/00tau/skyline-addon-easyQC.git
+% cd skyline-addonn-easyQC
+% chmod +x easyQC.r
+% PATH=$(pwd):$PATH
+</code></pre>
+
+<p>The synopsis is as follows:</p>
+
+<pre><code>easyQC.r [OPTIONS] REPORTFILE
+</code></pre>
+
+<p>Where <code>OPTIONS</code> is either <code>verbose</code> or noting.  For example, to produce some
+quality control plots from a file <code>some-report-file.csv</code> that has been
+generated by Skyline via some report template (e.g. the template <code>easyQC.skyr</code>
+should come in mind here), run either one of the following two code lines from
+the command line.</p>
+
+<pre><code>% easyQC.r some-report-file.csv
+% easyQC.r verbose some-report-file.csv
+</code></pre>
+
+<p>This will produce a file <code>some-report-file.pdf</code> with all the plots you need.</p>
+
+<h2>
+<a name="you-what-to-install-the-most-recent-and-latest-version-in-skyline" class="anchor" href="#you-what-to-install-the-most-recent-and-latest-version-in-skyline"><span class="octicon octicon-link"></span></a>You what to install the most recent and latest version in Skyline</h2>
+
+<p>If for some reasons, you are interested in installing the latest GitHub-version
+(or any other version of this software that is available on GitHub), the
+repository contains a convenient Makefile that will create the necessary files
+for the installation process for you.  Simply type:</p>
+
+<pre><code>% make
+</code></pre>
+
+<p>This will create a <code>easyQC.zip</code> file which contains the needed install scripts
 for Skyline.  Now, just follow your Skyline-GUI.</p>
-
-<h2>
-<a name="you-may-also-run-this-script-as-a-stand-alone-program" class="anchor" href="#you-may-also-run-this-script-as-a-stand-alone-program"><span class="octicon octicon-link"></span></a>You may also run this script as a stand-alone program</h2>
-
-<p>On Linux:</p>
-
-<pre><code>% git clone https://github.com/00tau/qc-addonn-for-skyline.git
-% cd qc-addon-for-skyline
-% chmod +x qcbymm.r
-</code></pre>
-
-<p>For example, to produce some quality control plots from an <code>example.csv</code> file
-that has been generated by Skyline via the <code>qcbymm.skyr</code> report template, run
-the following code from the command line.</p>
-
-<pre><code>% ./qcbymm.r example.cvs
-</code></pre>
-
-<p>This will produce a file <code>example.pdf</code> with all the plots you need.</p>
 
 <h2>
 <a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
 
 <p>Thomas W. D. Möbius (R-programming), Sebastian Malchow (Skyline wizard)</p>
-
-<h1>
-<a name="to-do" class="anchor" href="#to-do"><span class="octicon octicon-link"></span></a>To Do</h1>
-
-<ul>
-<li>Dynamically react on report template.</li>
-</ul>
-        </section>
-
-        <footer>
-          Quality control plots in Skyline is maintained by <a href="https://github.com/00tau">00tau</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Statistical Process and Quality Control in Mass Spectrometry Workflows maintained by <a href="https://github.com/00tau">00tau</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
