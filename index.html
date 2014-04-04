@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Statistical Process and Quality Control in Mass Spectrometry Workflows : Add-on tool for performing easy process and quality control tasks in Skyline" />
+    <meta name="description" content="Statistical Process and Quality Control in Mass Spectrometry Workflows : External tool for performing easy process and quality control tasks in Skyline" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/00tau/skyline-addon-easyqc">View on GitHub</a>
 
           <h1 id="project_title">Statistical Process and Quality Control in Mass Spectrometry Workflows</h1>
-          <h2 id="project_tagline">Add-on tool for performing easy process and quality control tasks in Skyline</h2>
+          <h2 id="project_tagline">External tool for performing easy process and quality control tasks in Skyline</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/00tau/skyline-addon-easyqc/zipball/master">Download this project as a .zip file</a>
@@ -32,31 +32,32 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a name="statistical-process-and-quality-control-in-mass-spectrometry-workflows" class="anchor" href="#statistical-process-and-quality-control-in-mass-spectrometry-workflows"><span class="octicon octicon-link"></span></a>Statistical Process and Quality Control in Mass Spectrometry Workflows</h1>
+<a name="start-using-easyqc-for-statistical-process-and-quality-control-in-mass-spectrometry-workflows" class="anchor" href="#start-using-easyqc-for-statistical-process-and-quality-control-in-mass-spectrometry-workflows"><span class="octicon octicon-link"></span></a>Start using easyQC for statistical process and quality control in mass spectrometry workflows</h1>
 
 <h2>
-<a name="what-is-easyqc" class="anchor" href="#what-is-easyqc"><span class="octicon octicon-link"></span></a>What is easyQC?</h2>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>The program <code>easyQC</code> is tool for statistical process and quality control in
-mass spectrometry workflows that integrates nicely in the <a href="https://skyline.gs.washington.edu/labkey/project/home/software/Skyline/begin.view">Skyline Targeted
-Proteomics
+<p>The program <code>easyQC</code> is an external tool for statistical process and quality
+control in mass spectrometry workflows that integrates nicely in the <a href="https://skyline.gs.washington.edu/labkey/project/home/software/Skyline/begin.view">Skyline
+Targeted Proteomics
 Environment</a>.</p>
 
 <h2>
 <a name="feature-list-at-a-glance" class="anchor" href="#feature-list-at-a-glance"><span class="octicon octicon-link"></span></a>Feature list at a glance</h2>
 
 <ul>
-<li>Automatically sorts your data by date and time and orders your observations
+<li>Automatically sorts your data by date and time, and orders your observations
 with the most recent on the right.  ("What? Does this mean I don't need to
-sort my data manually as it is the case for some other software tools out
+sort my data manually, as it is the case for some other software tools out
 there?", "Yes.")</li>
 <li>Dynamically adapts to custom report templates. (See details below.)</li>
 <li>Flow charts for single peptides can optionally be grouped together by their
 common protein accession.   (See details below.)</li>
 <li>Plots are generated in a nice page layout, ready for printing.</li>
-<li>Observations are colour-coded by a easy four-colour-code, which makes it very
-easy too detect deviations from the norm.</li>
-<li>Has a built in outlier detection.  (See details below.)</li>
+<li>Observations are colour-coded by a beneficial four-colour-code.  This makes
+it particularly easy to detect deviations from the norm.</li>
+<li>Has a built in outlier detection, which provides you with useful robust
+features.  (See details below.)</li>
 <li>Plot as <em>many</em> flow charts for as <em>many</em> peptides as you like.</li>
 </ul><h2>
 <a name="how-to-cite-this-software" class="anchor" href="#how-to-cite-this-software"><span class="octicon octicon-link"></span></a>How to cite this software</h2>
@@ -66,7 +67,7 @@ suggests to cite this software in the following fashion:</p>
 
 <pre><code>Möbius, T.W. and Malchow, S. (2014) easyQC: Statistical Process and Quality
 Control in Mass Spectrometry Workflows (Version 1.0) [Computer program].
-Available at: http://00tau.github.io/skyline-addon-easyQC/ (Accessed 03.
+Available at: http://00tau.github.io/skyline-addon-easyqc/ (Accessed 03.
 April, 2014)
 </code></pre>
 
@@ -81,17 +82,17 @@ on) <code>easyQC</code>.  You will be promoted for the path to <code>Rscript</co
 be installed on you system.</p>
 
 <p>We have realised that since the introduction of "Live Reports" in new Versions
-of Skyline, the import of new templates files might fail.  If this is the case
-for you, make sure two switch off "Live Reports", restart Skyline, and try the
+of Skyline, the import of new templates might fail.  If this is the case for
+you, make sure two switch off "Live Reports", restart Skyline, and try the
 installation again.</p>
 
 <p>The underlying code-base of <code>easyQC</code> relies on the R-packages
 <a href="http://ggplot2.org/">ggplot2</a>, <a href="http://plyr.had.co.nz/">plyr</a> and
 <a href="http://cran.r-project.org/web/packages/chron/index.html">chron</a>.  Fortunately,
 all these packages are hosted on <a href="http://cran.r-project.org/">CRAN</a>, and should
-automatically be installed into your R-environment, when installing <code>easyQC</code>.
-If, for some reasons, this should not be the case for you, make sure these
-three packages are installed in your R-environment.</p>
+automatically be installed into your R-environment, when installing <code>easyQC</code> in
+Skyline.  If, for some reasons, this should not be the case for you, make sure
+these three packages are installed in your R-environment.</p>
 
 <h2>
 <a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h2>
@@ -105,9 +106,9 @@ identifiable by these two.  Optionally, the field <code>ProteinName</code> can b
 your template.</p>
 
 <p>By default, the flow charts of ten peptides are grouped together into one plot
-each.  If the template also contains the associated protein accession of each
-peptide, namely the field <code>ProteinName</code>, then all peptides which belong to the
-same protein accession are grouped into one plot.</p>
+each.  If your report template also contains the associated protein accession
+of each peptide, namely the field <code>ProteinName</code>, then all peptides which belong
+to the same protein accession are grouped into one plot.</p>
 
 <p>Before the calculation of the mean and standard deviations of each flow chart,
 the software will do some outlier detection of your data, namely <a href="http://en.wikipedia.org/wiki/Grubbs%27_test_for_outliers">Grubbs' test
@@ -118,14 +119,14 @@ the estimated means and standard deviations some desirable
 <a href="http://en.wikipedia.org/wiki/Robust_statistics">robust</a> features.</p>
 
 <h2>
-<a name="you-can-also-use-easyqc-from-the-command-line" class="anchor" href="#you-can-also-use-easyqc-from-the-command-line"><span class="octicon octicon-link"></span></a>You can also use <code>easyQC</code> from the command line</h2>
+<a name="you-can-also-use-easyqc-as-a-stand-alone-command-line-program" class="anchor" href="#you-can-also-use-easyqc-as-a-stand-alone-command-line-program"><span class="octicon octicon-link"></span></a>You can also use easyQC as a stand-alone command line program</h2>
 
 <p>On Linux, you simply need to add the directory in which you have cloned
 <code>easyQC</code>'s repository to your path.  Also make sure that <code>easyQC.r</code> is
 executable.</p>
 
-<pre><code>% git clone https://github.com/00tau/skyline-addon-easyQC.git
-% cd skyline-addonn-easyQC
+<pre><code>% git clone https://github.com/00tau/skyline-addon-easyqc.git
+% cd skyline-addonn-easyqc
 % chmod +x easyQC.r
 % PATH=$(pwd):$PATH
 </code></pre>
@@ -164,7 +165,7 @@ for Skyline.  Now, just follow your Skyline-GUI.</p>
 <h2>
 <a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
 
-<p>Thomas W. D. Möbius (R-programming), Sebastian Malchow (Skyline wizard)</p>
+<p>Thomas W. D. Möbius (Maintainer, R-programming), Sebastian Malchow (Skyline wizard)</p>
       </section>
     </div>
 
