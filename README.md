@@ -1,25 +1,26 @@
-# Statistical Process and Quality Control in Mass Spectrometry Workflows
+# Start using easyQC for statistical process and quality control in mass spectrometry workflows
 
-## What is easyQC?
+## Introduction
 
-The program `easyQC` is tool for statistical process and quality control in
-mass spectrometry workflows that integrates nicely in the [Skyline Targeted
-Proteomics
+The program `easyQC` is an external tool for statistical process and quality
+control in mass spectrometry workflows that integrates nicely in the [Skyline
+Targeted Proteomics
 Environment](https://skyline.gs.washington.edu/labkey/project/home/software/Skyline/begin.view).
 
 ## Feature list at a glance
 
-- Automatically sorts your data by date and time and orders your observations
+- Automatically sorts your data by date and time, and orders your observations
   with the most recent on the right.  ("What? Does this mean I don't need to
-  sort my data manually as it is the case for some other software tools out
+  sort my data manually, as it is the case for some other software tools out
   there?", "Yes.")
 - Dynamically adapts to custom report templates. (See details below.)
 - Flow charts for single peptides can optionally be grouped together by their
   common protein accession.   (See details below.)
 - Plots are generated in a nice page layout, ready for printing.
-- Observations are colour-coded by a easy four-colour-code, which makes it very
-  easy too detect deviations from the norm.
-- Has a built in outlier detection.  (See details below.)
+- Observations are colour-coded by a beneficial four-colour-code.  This makes
+  it particularly easy to detect deviations from the norm.
+- Has a built in outlier detection, which provides you with useful robust
+  features.  (See details below.)
 - Plot as _many_ flow charts for as _many_ peptides as you like.
 
 ## How to cite this software
@@ -30,7 +31,7 @@ suggests to cite this software in the following fashion:
 
     Möbius, T.W. and Malchow, S. (2014) easyQC: Statistical Process and Quality
     Control in Mass Spectrometry Workflows (Version 1.0) [Computer program].
-    Available at: http://00tau.github.io/skyline-addon-easyQC/ (Accessed 03.
+    Available at: http://00tau.github.io/skyline-addon-easyqc/ (Accessed 03.
     April, 2014)
 
 Thank you for using (and citing) this software.
@@ -43,17 +44,17 @@ on) `easyQC`.  You will be promoted for the path to `Rscript`, which needs to
 be installed on you system.
 
 We have realised that since the introduction of "Live Reports" in new Versions
-of Skyline, the import of new templates files might fail.  If this is the case
-for you, make sure two switch off "Live Reports", restart Skyline, and try the
+of Skyline, the import of new templates might fail.  If this is the case for
+you, make sure two switch off "Live Reports", restart Skyline, and try the
 installation again.
 
 The underlying code-base of `easyQC` relies on the R-packages
 [ggplot2](http://ggplot2.org/), [plyr](http://plyr.had.co.nz/) and
 [chron](http://cran.r-project.org/web/packages/chron/index.html).  Fortunately,
 all these packages are hosted on [CRAN](http://cran.r-project.org/), and should
-automatically be installed into your R-environment, when installing `easyQC`.
-If, for some reasons, this should not be the case for you, make sure these
-three packages are installed in your R-environment.
+automatically be installed into your R-environment, when installing `easyQC` in
+Skyline.  If, for some reasons, this should not be the case for you, make sure
+these three packages are installed in your R-environment.
 
 ## Description
 
@@ -66,9 +67,9 @@ identifiable by these two.  Optionally, the field `ProteinName` can be added to
 your template.
 
 By default, the flow charts of ten peptides are grouped together into one plot
-each.  If the template also contains the associated protein accession of each
-peptide, namely the field `ProteinName`, then all peptides which belong to the
-same protein accession are grouped into one plot.
+each.  If your report template also contains the associated protein accession
+of each peptide, namely the field `ProteinName`, then all peptides which belong
+to the same protein accession are grouped into one plot.
 
 Before the calculation of the mean and standard deviations of each flow chart,
 the software will do some outlier detection of your data, namely [Grubbs' test
@@ -78,15 +79,15 @@ discarded in the estimation of the mean and standard deviations.   This gives
 the estimated means and standard deviations some desirable
 [robust](http://en.wikipedia.org/wiki/Robust_statistics) features.
 
-## You can also use `easyQC` from the command line
+## You can also use easyQC as a stand-alone command line program
 
 On Linux, you simply need to add the directory in which you have cloned
 `easyQC`'s repository to your path.  Also make sure that `easyQC.r` is
 executable.
 
 ```
-% git clone https://github.com/00tau/skyline-addon-easyQC.git
-% cd skyline-addonn-easyQC
+% git clone https://github.com/00tau/skyline-addon-easyqc.git
+% cd skyline-addonn-easyqc
 % chmod +x easyQC.r
 % PATH=$(pwd):$PATH
 ```
@@ -128,4 +129,4 @@ for Skyline.  Now, just follow your Skyline-GUI.
 Authors
 -------
 
-Thomas W. D. Möbius (R-programming), Sebastian Malchow (Skyline wizard)
+Thomas W. D. Möbius (Maintainer, R-programming), Sebastian Malchow (Skyline wizard)
